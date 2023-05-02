@@ -1,0 +1,30 @@
+name: "Nix build"
+
+on:
+  # Build on push
+  push:
+    branches:
+      - master
+
+  # Build on internal pull requests
+  pull_request:
+
+  # Allow to trigger for external PRs
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.attribute }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        attribute:
+          - .#
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v20
+    - run: nix build "${{matrix.attribute}}"
