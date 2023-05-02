@@ -1,6 +1,8 @@
 self: (final: prev: let 
   fetchurl = final.fetchurl;
 
+  # FIXME: It looks like this ignores the src and uses the rockspec
+  # to build the package - and the rockspec does not use make
   mkLPeg = lua: lua.pkgs.buildLuarocksPackage {
     pname = "lpeg";
     version = self.shortRev or "dirty";
@@ -18,9 +20,14 @@ self: (final: prev: let
       license.fullName = "MIT/X11";
     };
   };
-  in {
-  
-  lua51Packages.lpeg = mkLPeg final.pkgs.lua5_1;
 
-  luajitPackages.lpeg = mkLPeg final.pkgs.luajit;
+  lua51Packages.lpeg = mkLPeg prev.pkgs.lua5_1;
+
+  luajitPackages.lpeg = mkLPeg prev.pkgs.luajit;
+  in {
+
+  inherit 
+    lua51Packages
+    luajitPackages
+    ;
 })

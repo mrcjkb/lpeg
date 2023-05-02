@@ -29,22 +29,22 @@ FILES = lpvm.o lpcap.o lptree.o lpcode.o lpprint.o
 
 # For Linux
 linux:
-	$(MAKE) lpeg.so "DLLFLAGS = -shared -fPIC"
+	$(MAKE) liblpeg.so "DLLFLAGS = -shared -fPIC" "OUT = liblpeg.so"
 
 # For Mac OS
 macosx:
-	$(MAKE) lpeg.so "DLLFLAGS = -bundle -undefined dynamic_lookup"
+	$(MAKE) lpeg.dylib "DLLFLAGS = -dynamiclib -undefined dynamic_lookup" "OUT = lpeg.dylib"
 
-lpeg.so: $(FILES)
-	env $(CC) $(DLLFLAGS) $(FILES) -o lpeg.so
+liblpeg.so: $(FILES)
+	env $(CC) $(DLLFLAGS) $(FILES) -o $(OUT)
 
 $(FILES): makefile
 
-test: test.lua re.lua lpeg.so
+test: test.lua re.lua $(OUT)
 	./test.lua
 
 clean:
-	rm -f $(FILES) lpeg.so
+	rm -f $(FILES) $(OUT)
 
 
 lpcap.o: lpcap.c lpcap.h lptypes.h

@@ -32,15 +32,16 @@
         src = self;
         hooks = {
           alejandra.enable = true;
-          stylua.enable = true;
-          luacheck.enable = true;
         };
       };
 
       shell = pkgs.mkShell {
         name = "lpeg-devShell";
         buildInputs =
-          (with pre-commit-hooks.packages.${system}; [
+          ([
+            # TODO: Figure out how to get gcc to find the lua headers.
+          ])
+          ++ (with pre-commit-hooks.packages.${system}; [
             alejandra
           ]);
         shellHook = ''
@@ -55,7 +56,7 @@
       };
 
       packages = {
-        default = pkgs.luajitPackages.lpeg;
+        default = pkgs.lua51Packages.lpeg;
       };
     });
 }
